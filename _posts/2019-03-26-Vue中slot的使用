@@ -1,0 +1,104 @@
+个人理解：
+是对组件的扩展，通过slot插槽向组件内部指定位置传递内容，通过slot可以父子传参；
+
+
+开发背景(slot出现时为了解决什么问题)：
+正常情况下,<Child><span style=”color:red;”>hello world</span></Child>在组件标签Child中的span标签会被组件模板template内容替换掉，当想让组件标签Child中内容传递给组件时需要使用slot插槽；
+
+Slot的通俗理解
+
+是“占坑”，在组件模板中占好了位置，当使用该组件标签时候，组件标签里面的内容就会自动填坑（替换组件模板中<slot>位置），当插槽也就是坑<slot name=”mySlot”>有命名时，组件标签中使用属性slot=”mySlot”的元素就会替换该对应位置内容；
+
+
+Slot使用
+1、组件中有单个或多个未命名slot标签时，如下：
+<Child><span style=”color:red;”>hello world</span></Child>   
+
+
+
+<template>    
+
+  <div>
+
+<slot></slot>
+
+<slot  style=”color:blue;” >这是在slot上添加了样式</slot>
+
+<slot  name=”mySlot”>这是拥有命名的slot的默认内容</slot>
+
+</div>
+
+</template>
+
+会输出：两个红色的hello world，以及一个使用slot的默认内容
+
+
+
+注意：在slot标签添加样式无效。拥有命名的插槽不能被不含slot属性的标签内容替换，会显示slot的默认值（具名slot具有对应性）；
+
+
+2、组件中有多个命名的slot插槽时，可以实现父组件对子组件的指定位置显示内容或传参，如下：
+
+<Child>
+
+<span slot="header">hello world</span>
+
+<span slot="main">hello world</span>
+
+<span slot="footer">hello world</span>
+
+<span slot="other">{{otherData}}</span>
+
+</Child>
+
+
+
+<template>
+
+<div>
+
+<slot  name=”header”>这是拥有命名的slot的默认内容</slot>
+
+<slot  name=”main”>这是拥有命名的slot的默认内容</slot>
+
+<slot  name=”footer”>这是拥有命名的slot的默认内容</slot>
+
+<slot  name=”other”>这是拥有命名的slot的默认内容</slot>
+
+</div>
+
+</template>
+
+
+
+3、作用域插槽！！：
+使用时候子组件标签<Child>中要有<template scope=”scopeName”>标签，再通过scopeName.childProp就可以调用子组件模板中的childProp绑定的数据，所以作用域插槽是一种子传父传参的方式，解决了普通slot在parent中无法访问child数据的去问题；
+
+作用域插槽代表性的用例是列表组件，允许在parent父组件上对列表项进行自定义显示，如下该items的所有列表项都可以通过slot定义后传递给父组件使用，也就是说数据是相同的，不同的场景页面可以有不同的展示方式：
+
+   <ul>
+
+      <slot name="item" v-for="item in items" :text="item.text" :myname="item.myname" >
+
+         slot的默认内容
+
+      </slot>
+
+   </ul>
+
+
+
+   <Child>
+
+      <template slot="item" scope="props">
+
+        <li>{{props.myname}}</li>
+
+      </template>
+
+   </Child>
+--------------------- 
+作者：广积粮缓称王 
+来源：CSDN 
+原文：https://blog.csdn.net/zhouzuoluo/article/details/80536754 
+版权声明：本文为博主原创文章，转载请附上博文链接！
